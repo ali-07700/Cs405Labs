@@ -67,6 +67,11 @@ const module = device.createShaderModule({
       let cosA = cos(angle);
       let sinA = sin(angle);
 
+      let rotMat = mat2x2f(
+        vec2f( cosA, sinA),
+        vec2f(-sinA, cosA)
+      );
+
       if (index < 3u) {
         var triPositions = array<vec2f, 3>(
           vec2f( 0.0,  0.6),
@@ -75,10 +80,8 @@ const module = device.createShaderModule({
         );
 
         let p = triPositions[index];
-        let rotated = vec2f(
-          p.x * cosA - p.y * sinA,
-          p.x * sinA + p.y * cosA
-        );
+
+        let rotated = rotMat * p;
 
         let scaledX = rotated.x / uniforms.aspect;
         output.position = vec4f(scaledX, rotated.y, 0.0, 1.0);
